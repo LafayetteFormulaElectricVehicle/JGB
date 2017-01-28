@@ -53,8 +53,11 @@ void dac_disable(void) {
 }
 
 void dac_write(uint16_t level) {
-	DACH = (level >> 8);
+	// The DACH write updates the d2a
+	// DACH is only 2 bits wide
+	// Max value 0x3FF
 	DACL = level;
+	DACH = (level >> 8);
 }
 
 

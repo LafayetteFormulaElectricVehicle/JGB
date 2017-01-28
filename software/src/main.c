@@ -19,6 +19,8 @@
 #define CAN_ID  0x080
 #define CAN_MSK ~(0x03) 
 
+#define UART_NO_DATA 0x100
+
 //uint8_t response_data[CAN_BUFFER_SIZE];
 uint8_t can_buffer_tx[CAN_BUFFER_SIZE];
 uint8_t can_buffer_rx[CAN_BUFFER_SIZE];
@@ -41,23 +43,27 @@ int main(void) {
 	st_cmd_t rx_msg;
 	//Setup Comment
 	setup();
-	char str [] = "Hello World?\n";
+	uint16_t val = 0x0000;
+	char c;
+	char str [] = "Enter DAC count (0-1023)";
+	char buffer [20];
+	int buffer_index = 0;
+	puts("Enabling DAC");
+	dac_enable();
+	puts("DAC Online");
+	dac_write(0x3FF);
+	puts("Set DAC to 2^10-1 (1023)");
 	for(;;) {
+		strcpy(str, "Set DAC to 0x40");
 		puts(str);
-		//adc_1
-		//uart_println(adc_read(2));
-		////adc_2
-		//uart_println(adc_read(3));
-		////adc_3
-		//uart_println(adc_read(6));
-		////adc_4
-		//uart_println(adc_read(7));
-		////amp_0
-		//uart_println(adc_read(15));
-		////amp_1
-		//uart_println(adc_read(16));
-		
-		_delay_ms(2000);
+		dac_write(0x40);
+		_delay_ms(500);
+
+		strcpy(str, "Set DAC to 0x3FF");
+		puts(str);
+		dac_write(0x3FF);
+
+		_delay_ms(500);
 	}
 	
 	

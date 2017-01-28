@@ -1,0 +1,7 @@
+# Ignore bin and obj files
+software/bin/*
+software/obj/*
+
+# Ignore swp files
+# Created by vim when text editing
+*.swp

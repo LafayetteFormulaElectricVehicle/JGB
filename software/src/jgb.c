@@ -1,41 +1,63 @@
-#include "config.h"
+#include "jgb.h"
 
-//AVR-LIBC Headers 
-#include <avr/cpufunc.h>
-#include <avr/interrupt.h>
 #include <avr/io.h>
-#include <avr/sleep.h>
 
-#include <util/delay.h>
+#include <stdint.h>
 
-#include <stdio.h>
-
-#include "can_lib.h"
-#include "adc.h"
-#include "timer.h"
-#include "uart.h"
-
-//Device CAN_ID
-#define CAN_ID  0x080
-#define CAN_MSK ~(0x03) 
-
-int main(){
-	sei();
-	fdevopen(&uart_putc, NULL);
-	fdevopen(&uart_getc, NULL);
-	dac_enable();
-	char str [] = "Hello world";
-	puts(str);
-	while(1){
-		_delay_ms(1000);
-		strcpy(str, "High");
-		puts(str);
-		dac_write(0x2FF);
-		_delay_ms(1000);
-		strcpy(str, "Low");
-		puts(str);
-		dac_write(0x000);
+void analog_setup(uint8_t mode, uint8_t scale) {
+	switch(mode) {
+		//AREF SETUP
+		case ADC_AREF:
+			ADCSRA = (scale << ADPS0);
+			ADCSRB = (1 << AREFEN);
+			ADCSRA = (1 << ADEN);
+			break;
+		//AVCC
+		case ADC_AVCC:
+			// AREF = AVcc
+			ADMUX = (1<<REFS0);
+			// ADC Enable and prescaler of 128
+			// 16000000/128 = 125000
+			ADCSRA = (1<<ADEN)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0);
+			break;
 	}
-		
-
 }
+
+uint16_t adc_read(uint8_t pin) {
+	//Clear Lower 5 bits (MUX[4:0])
+	ADMUX &= ~(0x1F << MUX0);
+	ADMUX |= (pin << MUX0);
+	
+	uint16_t adc_value;
+	
+	//throw out first conversion
+	ADCSRA |= (1 << ADSC);
+	while(ADCSRA & (1<<ADSC));
+	adc_value = ADC;
+	
+	//2nd conversion gets saved
+	ADCSRA |= (1 << ADSC);
+	//Wait for complete conversion
+	while(ADCSRA & (1<<ADSC));
+	adc_value = ADC;
+	
+	return adc_value;
+}
+
+void dac_enable(void) {
+	DACON = (1 << DAOE) | (1 << DAEN);
+}
+
+void dac_disable(void) {
+	DACON = 0;
+}
+
+void dac_write(uint16_t level) {
+	// The DACH write updates the d2a
+	// DACH is only 2 bits wide
+	// Max value 0x3FF
+	DACL = level;
+	DACH = (level >> 8);
+}
+
+

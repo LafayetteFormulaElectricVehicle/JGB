@@ -11,7 +11,7 @@
 #include <stdio.h>
 
 #include "can_lib.h"
-#include "adc.h"
+#include "jgb.h"
 #include "timer.h"
 #include "uart.h"
 

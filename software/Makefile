@@ -17,12 +17,12 @@ SRC_DIR = src
 
 SRC_FILES = \
 	main.c \
-	adc.c \
 	timer.c \
 	can_lib.c \
 	can_drv.c \
 	uart.c \
 	ringbuf.c \
+	jgb.c \
 
 
 TEST_DIR = test

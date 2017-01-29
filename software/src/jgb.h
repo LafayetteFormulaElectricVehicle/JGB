@@ -162,7 +162,8 @@ void close_relay(uint8_t);
 #define OUTPUT 1
 
 /**
-* @brief Sets GPIO pin to be input or output
+* @brief Sets GPIO pin to be input or output. If setting as an input,
+* default to turn on the pull-up resistor
 * @param pin - Which GPIO pin mode is being set
 * @param mode - specify INPUT or OUTPUT
 */

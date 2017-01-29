@@ -118,11 +118,14 @@ void set_gpio_mode(uint8_t pin, uint8_t mode){
 		}
 		}else{
 		if(pin == GPIO0){
-			DDRB &= ~(1 << 2);
+			DDRB &= ~(1 << 2); //sets the mode as input
+			PORTB |= (1 << 2); //sets the pull up resistor active
 			}else if (pin == GPIO1){
 			DDRD &= ~(1 << 7);
+			PORTD |= (1 << 7);
 			}else if (pin == GPIO2){
 			DDRC &= ~(1 << 0);
+			PORTC |= (1 << 0);
 		}
 	}
 	

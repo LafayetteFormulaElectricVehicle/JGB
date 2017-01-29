@@ -25,7 +25,6 @@ char buffer[30];
 void setup(void) {
 	analog_setup(ADC_AVCC, ADC_SCALE_128);
 	dac_enable();
-	ac_enable(AMP0, AMP);
 	uart_init(BAUD);
 	
 	fdevopen(&uart_putc, NULL);
@@ -60,20 +59,13 @@ void dac_test(void){
 
 }
 
-void ac_test(void){
-	// run an analog compare test
-	uint8_t val = ac_status(AMP0);
-	sprintf(buffer, "Current AMP0 status %i", val);
-	puts(buffer);
-
-}
-
 int main(void) {
 	//Setup Comment
 	setup();
 
+
 	while(1){
-		ac_test();
+		dac_test();
 		_delay_ms(500);
 	}
 	

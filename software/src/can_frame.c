@@ -18,7 +18,7 @@ void set_ext_bit(uint8_t* frame, uint8_t slot, uint8_t bit, uint16_t value) {
 	if(slot < 8) {
 		uint16_t slot_value = (frame[slot] << 8) | frame[slot+1];
 		slot_value &= ~(1 << bit);
-		slot_value |= (value << bit)
+		slot_value |= (value << bit);
 		frame[slot*2] = slot_value;
 	}
 }
@@ -51,7 +51,7 @@ void set_std_bit(uint8_t* frame, uint8_t slot, uint8_t bit, uint16_t value) {
 	if(slot < 8) {
 		uint8_t slot_value = frame[slot];
 		slot_value &= ~(1 << bit);
-		slot_value |= (value << bit)
+		slot_value |= (value << bit);
 		frame[slot*2] = slot_value;
 	}
 }

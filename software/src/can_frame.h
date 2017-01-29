@@ -1,5 +1,7 @@
-#ifndef
+#ifndef CAN_FRAME_H
 #define CAN_FRAME_H
+
+uint8_t rvalue;
 
 void set_ext_slot(uint8_t* frame, uint8_t slot, uint16_t value);
 

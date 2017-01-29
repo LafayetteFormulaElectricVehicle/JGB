@@ -19,6 +19,12 @@
 * Currently the CAN bus line is terminated on the board.  This may be changed in the future.  If it is make sure that there is a 120 ohm resistor at the end of the CAN bus line.
 **/
 
+#ifndef JGB_H
+#define JGB_H
+
+
+
+
 #include <stdint.h>
 
 /*******************
@@ -150,7 +156,7 @@ void clear_gpio(uint8_t pin);
 uint8_t read_gpio(uint8_t pin);
 
 
-
+#endif
 
 
 

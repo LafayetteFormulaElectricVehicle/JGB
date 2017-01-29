@@ -21,6 +21,10 @@
 
 #include <stdint.h>
 
+/*******************
+* ADC functionallity
+*******************/
+
 /**
 * Use these defines to set the scale of the analog sources
 */
@@ -67,6 +71,10 @@ void analog_setup(uint8_t mode, uint8_t scale);
 */
 uint16_t adc_read(uint8_t pin);
 
+/*******************
+* DAC functionallity
+*******************/
+
 /**
 * @brief turn the DAC on
 */
@@ -85,4 +93,39 @@ void dac_disable(void);
 */
 void dac_write(uint16_t level);
 
+/*************************
+* Analog compare functions
+**************************/
 
+// These are variables for the ACnEN reg
+#define AMP0 0
+#define AMP1 1
+#define AMP0_enb (1 << 7)
+#define AMP1_enb (1 << 7)
+#define AMP0_Interrupt (1 << 6)
+#define AMP1_Interrupt (1 << 6)
+#define toggle (0x00 << 4)
+#define pos_edge (0x11 << 4)
+#define neg_edge (0x10 << 4)
+#define VREF/6.4 0x0
+#define VREF/3.2 0x1
+#define VREF/2.13 0x2
+#define VREF/1.60 0x3
+#define Bandgap 0x4
+#define DACresult 0x5
+#define AMP- 0x6
+/**
+* @brief setup analog compare
+*
+* This sets up the two analog comparators.
+* Either can be specified (AMP0 or AMP1)
+* There are many different modes that they can operate in.
+*/
+void ac_enable(uint8_t comparator, uint8_t mode);
+
+/**
+* @brief get analog compare status
+*
+* This returns the analog compare status of the desired comparator
+*/
+uint8_t ac_status(uint8_t comparator)

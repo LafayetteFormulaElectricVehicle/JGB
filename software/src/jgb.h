@@ -151,6 +151,26 @@ void open_relay(uint8_t);
 */
 void close_relay(uint8_t);
 
+/*************************
+* GPIO Functionality
+**************************/
+
+#define GPIO0 16
+#define GPIO1 15
+#define GPIO2 30
+#define INPUT 0
+#define OUTPUT 1
+
+void set_gpio_mode(uint8_t pin, uint8_t mode);
+
+void set_gpio(uint8_t pin);
+
+void clear_gpio(uint8_t pin);
+
+uint8_t read_gpio(uint8_t pin);
+
+
+
 
 
 

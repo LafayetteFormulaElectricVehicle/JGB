@@ -107,4 +107,64 @@ void close_relay(uint8_t relay_num){
 }
 
 
+void set_gpio_mode(uint8_t pin, uint8_t mode){
+	if (mode){
+		if(pin == GPIO0){
+			DDRB |= (1 << 2);
+			}else if (pin == GPIO1){
+			DDRD |= (1 << 7);
+			}else if (pin == GPIO2){
+			DDRC |= (1 << 0);
+		}
+		}else{
+		if(pin == GPIO0){
+			DDRB &= ~(1 << 2);
+			}else if (pin == GPIO1){
+			DDRD &= ~(1 << 7);
+			}else if (pin == GPIO2){
+			DDRC &= ~(1 << 0);
+		}
+	}
+	
+}
+
+
+void set_gpio(uint8_t pin){
+	
+	if(pin == GPIO0){
+		PORTB |= (1 << 2);
+		}else if (pin == GPIO1){
+		PORTD |= (1 << 7);
+		}else if (pin == GPIO2){
+		PORTC |= (1 << 0);
+	}
+	
+}
+
+void clear_gpio(uint8_t pin){
+	
+	if(pin == GPIO0){
+		PORTB &= ~(1 << 2);
+		}else if (pin == GPIO1){
+		PORTD &= ~(1 << 7);
+		}else if (pin == GPIO2){
+		PORTC &= ~(1 << 0);
+	}
+	
+}
+
+uint8_t read_gpio(uint8_t pin){
+	
+	if(pin == GPIO0){
+		return ((0x04 & PINB) != 0);
+		}else if (pin == GPIO1){
+		return ((0x80 & PIND) != 0);
+		}else if (pin == GPIO2){
+		return ((0x01 & PINC) != 0);
+	}
+	return 0;
+	
+}
+
+
 

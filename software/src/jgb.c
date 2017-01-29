@@ -60,4 +60,29 @@ void dac_write(uint16_t level) {
 	DACH = (level >> 8);
 }
 
+void open_relay(uint8_t relay_num){
+	
+	if(relay_num == RELAY1){
+		PORTC &= ~(1 << 6);
+		}else if (relay_num == RELAY2){
+		PORTD &= ~(1 << 0);
+		}else if (relay_num == RELAY3){
+		PORTD &= ~(1 << 1);
+	}
+	
+}
+
+void close_relay(uint8_t relay_num){
+	
+	if(relay_num == RELAY1){
+		PORTC |= (1 << 6);
+		}else if (relay_num == RELAY2){
+		PORTD |= (1 << 0);
+		}else if (relay_num == RELAY3){
+		PORTD |= (1 << 1);
+	}
+	
+}
+
+
 

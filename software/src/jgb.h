@@ -129,3 +129,29 @@ void ac_enable(uint8_t comparator, uint8_t mode);
 * This returns the analog compare status of the desired comparator
 */
 uint8_t ac_status(uint8_t comparator)
+
+
+
+/*************************
+* Relay functions
+**************************/
+#define RELAY1  22
+#define RELAY2  29
+#define RELAY3  32
+
+/**
+* @brief open a relay
+* @param which relay to open
+*/
+void open_relay(uint8_t);
+
+/**
+* @brief close a relay
+* @param which relay to close
+*/
+void close_relay(uint8_t);
+
+
+
+
+

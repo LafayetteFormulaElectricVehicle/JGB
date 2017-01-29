@@ -161,12 +161,30 @@ void close_relay(uint8_t);
 #define INPUT 0
 #define OUTPUT 1
 
+/**
+* @brief Sets GPIO pin to be input or output
+* @param pin - Which GPIO pin mode is being set
+* @param mode - specify INPUT or OUTPUT
+*/
 void set_gpio_mode(uint8_t pin, uint8_t mode);
 
+/**
+* @brief Sets GPIO pin high
+* @param pin - Which GPIO pin is being set
+*/
 void set_gpio(uint8_t pin);
 
+/**
+* @brief Sets GPIO pin low
+* @param pin - Which GPIO pin is being cleared
+*/
 void clear_gpio(uint8_t pin);
 
+/**
+* @brief Read value on a GPIO pin
+* @param pin - Which GPIO pin is being read
+* @return - returns Whether specified pin is high or low
+*/
 uint8_t read_gpio(uint8_t pin);
 
 

@@ -56,12 +56,33 @@
 */
 void analog_setup(uint8_t mode, uint8_t scale);
 
+/**
+* @brief get the adc value (10 bit) of a pin
+*
+* This function reads the ADC value from one of the ADC pins.
+* The wiring of the JGB means that ADC1 is not what the AVR labels as ADC1
+* What is defined as ADC1 is what has the ADC1 silkscreen
+* Do not worry about the lower levels unless the board is rerouted.
+* @param pin which ADC to use, ADC(1-4)
+*/
 uint16_t adc_read(uint8_t pin);
 
+/**
+* @brief turn the DAC on
+*/
 void dac_enable(void);
 
+/**
+* @brief turn the DAC off
+*/
 void dac_disable(void);
 
+/**
+* @brief set the DAC value
+*
+* There is only one DAC on the JGB.
+* It is a 10 bit DAC
+*/
 void dac_write(uint16_t level);
 
 

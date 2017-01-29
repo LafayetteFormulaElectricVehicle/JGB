@@ -60,6 +60,28 @@ void dac_write(uint16_t level) {
 	DACH = (level >> 8);
 }
 
+void ac_enable(uint8_t comparator, uint8_t mode){
+	switch(comparator){
+		case AMP0:
+			AC0CON = mode | AMP_enb;
+			break;
+		case AMP1:
+			AC1CON = mode | AMP_enb;
+			break;
+		}
+}
+
+uint8_t ac_status(uint8_t comparator){
+	return ACSR;
+	switch(comparator){
+		case AMP0:
+			return ((ACSR & 0x01) != 0);
+		case AMP1:
+			return ((ACSR & 0x02) != 0);
+		}
+	return 0;
+}
+
 void open_relay(uint8_t relay_num){
 	
 	if(relay_num == RELAY1){

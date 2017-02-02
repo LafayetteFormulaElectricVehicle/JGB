@@ -23,7 +23,7 @@ st_cmd_t tx_msg;
 st_cmd_t rx_conf, rx_rtr;
 
 //#define CAN_BUFFER_SIZE 8
-#define CAN_ID  0x200
+#define CAN_ID  0x80
 
 
 uint8_t can_buffer_tx[CAN_BUFFER_SIZE];
@@ -48,7 +48,8 @@ int main(void)
 	fdevopen((int (*)(char,  struct __file *))&uart_getc, NULL);
 	//fdevopen(&uart_getc, NULL);
 	can_init(0);
-	CANGIE |= (1 << ENBOFF);
+	//CANGIE |= (1 << ENBOFF);
+	CANGIE |= (1 << ENIT);
 	sei();
 	
 	can_buffer_rx[0] = 0x00; //Byte 0
@@ -66,19 +67,21 @@ int main(void)
 	
 	rx_conf.pt_data = &can_buffer_rx[0];
 	rx_conf.ctrl.ide = 0;
-	rx_conf.dlc = 2;//
-	rx_conf.ctrl.rtr = 0;
+	rx_conf.dlc = 8;//
+	//rx_conf.ctrl.rtr = 0;
 	rx_conf.id.std = CAN_ID+1;//
 	//rx_conf.cmd = CMD_RX_DATA;
-	rx_conf.cmd = CMD_RX_DATA_MASKED;
+	rx_conf.cmd = CMD_RX_MASKED;
 
 	//Setup receive message
 	rx_rtr.pt_data = &can_buffer_rx[7];
 	rx_rtr.ctrl.ide = 0;
 	rx_rtr.ctrl.rtr = 1;
-	rx_rtr.dlc = 0;
+	rx_rtr.dlc = 8;
 	rx_rtr.id.std = CAN_ID+1;
 	rx_rtr.cmd = CMD_RX_REMOTE_MASKED;
+	
+	char temp_buff [30];
 	
 	while (1)
 	{
@@ -91,13 +94,13 @@ int main(void)
 		
 		//To be changed for updated communications protocol:
 		can_buffer_tx[0] = 0xFF; //Byte 0
-		can_buffer_tx[1] = 0xFF; //Physical throttle
-		can_buffer_tx[2] = 0xFF; //Software throttle
-		can_buffer_tx[3] = 0xFF; //Current
-		can_buffer_tx[4] = 0xFF; //Current
-		can_buffer_tx[5] = 0xFF; //Voltage
-		can_buffer_tx[6] = 0xFF; //Voltage
-		can_buffer_tx[7] = 0xFF; //Reserved
+		can_buffer_tx[1] = 0x55; //Physical throttle
+		can_buffer_tx[2] = 0x33; //Software throttle
+		can_buffer_tx[3] = 0x0F; //Current
+		can_buffer_tx[4] = 0xF0; //Current
+		can_buffer_tx[5] = 0x77; //Voltage
+		can_buffer_tx[6] = 0xaa; //Voltage
+		can_buffer_tx[7] = 0x9c; //Reserved
 		
 		//can_buffer_rx[0] = 0x00; //Byte 0
 		//can_buffer_rx[1] = 0x00; //Software throttle
@@ -112,7 +115,7 @@ int main(void)
 		tx_msg.pt_data = &can_buffer_tx[0];
 		tx_msg.ctrl.ide = 0;
 		tx_msg.dlc = 7;
-		tx_msg.id.std = CAN_ID;
+		tx_msg.id.std = 0x011;
 		tx_msg.cmd = CMD_TX_DATA;
 		
 		
@@ -124,9 +127,55 @@ int main(void)
 		
 		//SETUP FOR RECEIVING BOARD:
 		
-		puts("Hello World!");
+		//puts("Hello World!");
+		//
+		//while(can_cmd(&rx_conf) != CAN_CMD_ACCEPTED){
+			////puts("111");
+		//}
+		
+		
+		
+		
+		while(can_cmd(&rx_conf) != CAN_CMD_ACCEPTED) {
+			puts("here");
+			_delay_ms(20);
+			}
+			
+			while(can_get_status(&rx_conf) == CAN_STATUS_NOT_COMPLETED){
+				uint8_t can_status;
+				can_status = CANSTMOB;
+				sprintf(temp_buff, "Can status: %x", can_status);
+				puts(temp_buff);
+				_delay_ms(500);
+			}
+		
+		
+		
+		//wait for RTR MOb to configure
+		//while(can_cmd(&rx_rtr) != CAN_CMD_ACCEPTED){
+			////puts("aaa");
+		//}
+		
+		for (int i = 0; i <8; i++){
+			uint8_t can_msg;
+			can_msg = can_buffer_rx[i];
+			sprintf(temp_buff, "Can message: %x", can_msg);
+			puts(temp_buff);
+		}
+		
+		//Looking at the CAN data register:
+		//uint8_t can_msg;
+		//can_msg = CANMSG;
+		//char can_msg_str [16];
+		//itoa(can_msg, can_msg_str, 16);
+		//////puts("Status:\n");
+		//puts(can_msg_str);
+		//}
+		
+		
+		
 		//can_get_data(0x201);
-		while(can_cmd(&rx_conf) != CAN_CMD_ACCEPTED);
+		
 		//wait for receiving MOb to configure
 		//while(can_cmd(&rx_conf) != CAN_CMD_ACCEPTED){
 			//uint8_t temp_num;
@@ -141,17 +190,17 @@ int main(void)
 		//}
 		//puts("O");
 		_delay_ms(500);
-		uint8_t temp_num;
-		temp_num = can_buffer_rx[0] | can_buffer_rx[1] | can_buffer_rx[2] | can_buffer_rx[3] | can_buffer_rx[4] | can_buffer_rx[5] | can_buffer_rx[6] | can_buffer_rx[7];
-		if (temp_num == 0){
-			puts("X");
-			}else{
-			puts("O");
-			break;
-		}
+		//uint8_t temp_num;
+		//temp_num = can_buffer_rx[0] | can_buffer_rx[1] | can_buffer_rx[2] | can_buffer_rx[3] | can_buffer_rx[4] | can_buffer_rx[5] | can_buffer_rx[6] | can_buffer_rx[7];
+		//if (temp_num == 0){
+			//puts("X");
+			//}else{
+			//puts("O");
+			//break;
+		//}
 		_delay_ms(500);
 		
-		
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		//if(can_cmd(&rx_conf) == CAN_CMD_ACCEPTED);
 		

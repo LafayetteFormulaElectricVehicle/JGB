@@ -73,13 +73,13 @@ int main(void)
 	char temp_two [30];
 	char buffer[128];
 	int len;
-	/**
-	fflush(stdin);
-	puts("Who are you?");
-	fflush(stdin);
-	fgets(temp_buff, 8, stdin);
-	printf("Good to meet you, %s. \n", temp_buff);
-	*/
+	
+	//fflush(stdin);
+	//puts("Who are you?");
+	//fflush(stdin);
+	//fgets(temp_buff, 8, stdin);
+	//printf("Good to meet you, %s. \n", temp_buff);
+	
 	while (1)
 	{
 		can_buffer_tx[0] = 0xFF; //Byte 0
@@ -106,16 +106,16 @@ int main(void)
 			puts(temp_buff);
 		}*/
 		
-		fgets(temp_buff, 8, stdin);
+		//fgets(temp_buff, 8, stdin);
 		//puts(temp_buff);
-		len = strlen(temp_buff);
-		puts(len);
+		//len = strlen(temp_buff);
+		//puts(len);
 		
 		/**		
 		uint8_t can_msg;
 		fgets(temp_buff, 8, stdin);
 		can_msg = uart_getc(temp_buff);
-		sprintf(temp_buff, "%x", can_msg);
+		sprintf(temp_buff, "%x", can_msg);*/
 		
 		for(;;) {
 			puts("Type Something:");
@@ -123,7 +123,7 @@ int main(void)
 			puts(&buffer[0]);
 			_delay_ms(500);
 			_delay_ms(500);
-		}*/
+		}
 		_delay_ms(500);
 		_delay_ms(500);
 		_delay_ms(500);

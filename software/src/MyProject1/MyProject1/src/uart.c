@@ -20,19 +20,23 @@
 volatile struct ringbuffer tx_buffer = {{0}, 0, 0, true};
 volatile struct ringbuffer rx_buffer = {{0}, 0, 0, true};
 
-//Receive interrupt routine
+//AVR UART Interrupt (Receive and Transmit)
 ISR(LIN_TC_vect) {
+	
+	// A byte has been received by the UART
 	if(LINSIR & (1 << LRXOK)) {
 		//clear LRXOK
 		LINSIR &= ~(1 << LRXOK);
 		
 		//write buffer
 		uint8_t recv = LINDAT;
-		buffer_write(&tx_buffer, recv);	
+		buffer_write(&rx_buffer, recv);	
 	}
+	
+	// A byte was successfully transmitted by the UART
 	if(LINSIR & (1 << LTXOK)) {
 		//clear LTXOK
-		//LINSIR &= ~(1 << LTXOK);
+		LINSIR &= ~(1 << LTXOK);
 		uint8_t data = buffer_read(&tx_buffer); 
 		LINDAT = data;
 		

@@ -80,6 +80,12 @@ int main(void)
 	//fgets(temp_buff, 8, stdin);
 	//printf("Good to meet you, %s. \n", temp_buff);
 	
+	//for(;;) {
+	//	printf("Last char in rx_buffer: ");
+	//	printf("%c\n", uart_getc(NULL));
+	//	_delay_ms(500);
+	//}
+	
 	while (1)
 	{
 		can_buffer_tx[0] = 0xFF; //Byte 0
@@ -124,6 +130,7 @@ int main(void)
 			_delay_ms(500);
 			_delay_ms(500);
 		}
+		
 		_delay_ms(500);
 		_delay_ms(500);
 		_delay_ms(500);

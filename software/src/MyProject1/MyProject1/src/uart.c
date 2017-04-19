@@ -14,6 +14,7 @@
 
 /************************************************************************
  * Written by: John Gehrig
+ *
  * Modified by: Raji Birru on 04/06/2017                                                                     */
 /************************************************************************/
 
@@ -69,13 +70,13 @@ void uart_init(uint16_t baud){
 			
 int uart_putc(char data, FILE* file) {
 	cli();
-	//the the buffer was empty, enable tx interrupt
+	// the buffer was empty, enable TX interrupt
 	if(!(LINENIR & (1 << LENTXOK))) {
 		LINENIR |= (1 << LENTXOK);
 		LINDAT = data;
 	}
 	else {
-		//add data to buffer
+		// add data to buffer
 		buffer_write(&tx_buffer, data);
 	}
 	sei();
@@ -88,6 +89,7 @@ uint8_t uart_getc(FILE* file) {
 	int data_read = buffer_read(&rx_buffer);
 	if(data_read == '\r') data_read = '\n';
 	
+	//while (buffer_empty(&rx_buffer));
 	return data_read;
 	sei();
 }

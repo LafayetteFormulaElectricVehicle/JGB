@@ -19,16 +19,19 @@
 #include <string.h>
 
 //#define sei
-st_cmd_t tx_msg;
-st_cmd_t rx_msg;
+st_cmd_t tx_msg_one;
+st_cmd_t tx_msg_two;
 
-//#define CAN_BUFFER_SIZE 8
+st_cmd_t rx_msg_one;
+st_cmd_t rx_msg_two;
+
 #define CAN_ID  0x80
 
 
 uint8_t can_buffer_tx[CAN_BUFFER_SIZE];
 uint8_t can_buffer_rx[CAN_BUFFER_SIZE];
-
+uint8_t can_buffer_rxx[CAN_BUFFER_SIZE];
+uint8_t can_buffer_txx[CAN_BUFFER_SIZE];
 
 
 int main(void)
@@ -73,34 +76,42 @@ int main(void)
 	rx_rtr.cmd = CMD_RX_REMOTE_MASKED;
 	*/
 	
+	// RX Setup
+	rx_msg_one.pt_data = &can_buffer_rxx[0];
+	rx_msg_one.ctrl.ide = 0;
+	rx_msg_one.dlc = CAN_BUFFER_SIZE;
+	rx_msg_one.id.std = CAN_ID;
+	rx_msg_one.cmd = CMD_RX_MASKED;	
+			
+	rx_msg_two.pt_data = &can_buffer_rx[0];
+	rx_msg_two.ctrl.ide = 0;
+	rx_msg_two.dlc = CAN_BUFFER_SIZE;
+	rx_msg_two.id.std = CAN_ID;
+	rx_msg_two.cmd = CMD_RX_MASKED;
+	
 	char temp_buff [8];
 	char temp_two [30];
 	char buffer[128];
 	int i = 0;
-	uint8_t curr;
+	uint8_t curr;	
 	
-	/**
-	for(;;) {
-		puts("Type Something:");
-		fgets(&buffer[0], 8, stdin);
-		puts(&buffer[0]);
-		_delay_ms(2000);
-	}*/
+	int tx_count = 0;
+	int rx_count = 0;
 	
-	
+	/*
 	for(;;) {
 		curr = uart_getc(NULL);
 		if(i < 8){
-			printf("Last char in rx_buffer: ");
+			printf("Char to be sent: ");
 			printf("%c\n", curr);
 		}
 		else if (i == 8) {
-			printf("\n 8 ENTERED \n");
+			printf("\n 8 Entered. \n");
 			i++;
 		}
 		else if (i > 8){
 			i++;
-			printf("Now sending over can bus. \n");
+			printf("Now sending over CAN bus. \n");
 			break;
 		}
 		
@@ -111,66 +122,72 @@ int main(void)
 		}				
 		
 		_delay_ms(2000);
-	}
+	}*/
 	
 	
-	while (1)
-	{	
-		
+	while (1) {			
 		
 		/************************************************************************/
 		/*                         CANBUS SEND SECTION                          */
 		/************************************************************************/
-		
-		//can_buffer_tx[0] = 0xFF; //Byte 0
-		//can_buffer_tx[1] = 0x55; //Physical throttle
-		//can_buffer_tx[2] = 0x33; //Software throttle
-		//can_buffer_tx[3] = 0x0F; //Current
-		//can_buffer_tx[4] = 0xF0; //Current
-		//can_buffer_tx[5] = 0x77; //Voltage
-		//can_buffer_tx[6] = 0xaa; //Voltage
-		//can_buffer_tx[7] = 0x9c; //Reserved
-										
+		/*
+		// TX Setup
+		printf("Started... \n");	
 		// point message object to first element of data buffer
-		tx_msg.pt_data = &can_buffer_tx[0];
+		tx_msg_one.pt_data = &can_buffer_tx[0];
 		// standard CAN frame type (2.0A)
-		tx_msg.ctrl.ide = 0;
+		tx_msg_one.ctrl.ide = 0;
 		// Number of bytes being sent (8 max)
-		tx_msg.dlc = CAN_BUFFER_SIZE;
+		tx_msg_one.dlc = CAN_BUFFER_SIZE;
 		// populate ID field with ID Tag
-		tx_msg.id.std = CAN_ID;
+		tx_msg_one.id.std = CAN_ID;
 		// assign this as a "Standard (2.0A) Reply" message object
-		tx_msg.cmd = CMD_TX_DATA;
+		tx_msg_one.cmd = CMD_TX_DATA;
+		
+		printf("About to send... \n");
 		
 		// wait for MOb to configure
-		while(can_cmd(&tx_msg) != CAN_CMD_ACCEPTED);
+		while(can_cmd(&tx_msg_one) != CAN_CMD_ACCEPTED);
 
 		// wait for a transmit request to come in, and send a response
-		while(can_get_status(&tx_msg) == CAN_STATUS_NOT_COMPLETED);
+		while(can_get_status(&tx_msg_one) == CAN_STATUS_NOT_COMPLETED);
+		rx_count++;
 		
-		printf("Last char sent: ");
-		printf("%c\n", can_buffer_tx[7]);
-		
+		printf("Sent: ");
+		printf("%d\n",rx_count);*/
 		
 		/************************************************************************/
 		/*                      CANBUS RECEIVE SECTION                          */
 		/************************************************************************/
 		
-		/**
-		rx_msg.pt_data = &can_buffer_rx[0];
-		rx_msg.ctrl.ide = 0;
-		rx_msg.dlc = CAN_BUFFER_SIZE;
-		rx_msg.id.std = CAN_ID;
-		rx_msg.cmd = CMD_RX_MASKED;
 		
-		while(can_cmd(&rx_msg) != CAN_CMD_ACCEPTED);
-		while(can_get_status(&rx_msg) == CAN_STATUS_NOT_COMPLETED);
+		// TX Setup
 		
-		printf("Chars received: ");
+		// point message object to first element of data buffer
+		tx_msg_two.pt_data = &can_buffer_txx[0];
+		// standard CAN frame type (2.0A)
+		tx_msg_two.ctrl.ide = 0;
+		// Number of bytes being sent (8 max)
+		tx_msg_two.dlc = CAN_BUFFER_SIZE;
+		// populate ID field with ID Tag
+		tx_msg_two.id.std = CAN_ID;
+		// assign this as a "Standard (2.0A) Reply" message object
+		tx_msg_two.cmd = CMD_TX_DATA;	
+		
+		printf("\n Waiting... ");
+		
+		while(can_cmd(&rx_msg_two) != CAN_CMD_ACCEPTED);
+		while(can_get_status(&rx_msg_two) == CAN_STATUS_NOT_COMPLETED);
+				
+		rx_count++;
+		printf("SOMETHING CAME IN. Packet ");
+		printf("%d\n",rx_count);		
+		
+		printf("\nChars received: ");
 		for (int k = 0; k < 8; k++){			
-			printf("%c\n", can_buffer_rx[k]);
+			printf("%c ", can_buffer_rx[k]);			
 		}
-		*/
+		
 		_delay_ms(5000);
 		
 	}

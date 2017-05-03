@@ -86,10 +86,10 @@ int uart_putc(char data, FILE* file) {
 uint8_t uart_getc(FILE* file) {
 	cli();
 	
+	//while (buffer_empty(&rx_buffer));
 	int data_read = buffer_read(&rx_buffer);
 	if(data_read == '\r') data_read = '\n';
-	
-	//while (buffer_empty(&rx_buffer));
+		
 	return data_read;
 	sei();
 }

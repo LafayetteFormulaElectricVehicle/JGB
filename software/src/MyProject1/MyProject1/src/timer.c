@@ -55,11 +55,11 @@ bool timer0_pwm_write(uint8_t ocPin, uint8_t value) {
 
 }
 
-void timer1_pwm_init(uint8_t ocPin, uint8_t pwmMode, uint8_t wgmMode) {
+void timer1_pwm_init() {
 	
 }
 
-void timer1_pwm_write(uint8_t ocPin, uint8_t value) {
+void timer1_pwm_write() {
 	
 }
 

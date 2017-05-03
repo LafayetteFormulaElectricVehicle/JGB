@@ -98,7 +98,7 @@ int main(void)
 	int tx_count = 0;
 	int rx_count = 0;
 	
-	/*
+	
 	for(;;) {
 		curr = uart_getc(NULL);
 		if(i < 8){
@@ -116,13 +116,12 @@ int main(void)
 		}
 		
 		if(curr != NULL){
-			printf("\n GOT ONE \n");
 			can_buffer_tx[i] = curr;
 			i = i+1;
 		}				
 		
-		_delay_ms(2000);
-	}*/
+		_delay_ms(4000);
+	}
 	
 	
 	while (1) {			
@@ -130,7 +129,7 @@ int main(void)
 		/************************************************************************/
 		/*                         CANBUS SEND SECTION                          */
 		/************************************************************************/
-		/*
+		
 		// TX Setup
 		printf("Started... \n");	
 		// point message object to first element of data buffer
@@ -154,13 +153,13 @@ int main(void)
 		rx_count++;
 		
 		printf("Sent: ");
-		printf("%d\n",rx_count);*/
+		printf("%d\n",rx_count);
 		
 		/************************************************************************/
 		/*                      CANBUS RECEIVE SECTION                          */
 		/************************************************************************/
 		
-		
+		/**
 		// TX Setup
 		
 		// point message object to first element of data buffer
@@ -174,20 +173,20 @@ int main(void)
 		// assign this as a "Standard (2.0A) Reply" message object
 		tx_msg_two.cmd = CMD_TX_DATA;	
 		
-		printf("\n Waiting... ");
+		printf("\nWaiting... ");
 		
 		while(can_cmd(&rx_msg_two) != CAN_CMD_ACCEPTED);
 		while(can_get_status(&rx_msg_two) == CAN_STATUS_NOT_COMPLETED);
 				
 		rx_count++;
-		printf("SOMETHING CAME IN. Packet ");
+		printf("Packet Received. Packet No. ");
 		printf("%d\n",rx_count);		
 		
 		printf("\nChars received: ");
 		for (int k = 0; k < 8; k++){			
 			printf("%c ", can_buffer_rx[k]);			
 		}
-		
+		*/
 		_delay_ms(5000);
 		
 	}
